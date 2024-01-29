@@ -2,8 +2,8 @@
 # vars file for f5-bigip
 ansible_connection: local
 f5_provider:
-  password: qwerty#12
-  server: 192.168.100.237
-  user: admin
+  password: {update the f5 user account here}
+  server: {update the f5 user account here}
+  user: {update the f5 user account here}
   validate_certs: False
   server_port: 443

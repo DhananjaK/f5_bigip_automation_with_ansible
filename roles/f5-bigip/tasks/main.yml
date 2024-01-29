@@ -1,0 +1,25 @@
+---
+# tasks file for f5-bigip
+
+- block:
+  - name: Gather fact from F5 BIG-IP 
+    ansible.builtin.include_tasks: f5_gather_fact_nodes.yml
+    loop: "{{ member_list }}"
+
+  - name: Gather fact from F5 BIG-IP 
+    ansible.builtin.import_tasks: f5_gather_fact_vip_pool.yml
+
+  rescue:
+  - name: Create nodes
+    ansible.builtin.include_tasks: add_nodes.yml
+    loop: "{{ member_list }}"
+
+  - name: Create a pool List
+    ansible.builtin.import_tasks: create_pool_list.yml
+
+  - name: Add members to the Pool
+    ansible.builtin.include_tasks: add_members_to_pool.yml
+    loop: "{{ member_list }}"
+
+  - name: Create virtual server and attach the pool
+    ansible.builtin.import_tasks: add_virtual_server.yml

@@ -1,0 +1,35 @@
+---
+- block:
+  - name: Collect BIG-IP LTM Nodes information
+    bigip_device_info:
+      gather_subset:
+        - "nodes"
+      provider: "{{ f5_provider }}"
+    delegate_to: localhost
+    register: info_out 
+
+  - name: Set the query with replacing with {{ item.name }} variable
+    set_fact:              
+      node_query: "ansible_net_nodes[?name=='{{ item.name }}'].name"
+
+  - name: Set the node name 
+    set_fact:
+      node_name: 
+        -  "{{ info_out.ansible_facts| json_query ( node_query ) | first }}"
+
+  - name: Print node name 
+    ansible.builtin.debug:
+      msg: "Node name {{ node_name[0] }} is already exist"
+
+  rescue:
+  - name: Create {{ item.name }} node in the F5
+    bigip_node:
+      host: "{{ item.host }}"
+      name: "{{ item.name  }}"
+      provider:  "{{ f5_provider }}"
+    delegate_to: localhost
+    when: node_name is undefined 
+
+  - name: Print node {{ item.name }} status
+    ansible.builtin.debug:
+      msg: "The {{ item.name }} node has been created "

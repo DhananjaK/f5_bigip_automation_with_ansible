@@ -1,0 +1,36 @@
+---
+- block:
+  - name: Collect BIG-IP LTM Pool information
+    bigip_device_info:
+      gather_subset:
+        - "ltm-pools"
+      provider: "{{ f5_provider }}"
+    delegate_to: localhost
+    register: info_out 
+
+  - name: Set the query with replacing with {{ pool_name }} variable
+    set_fact:              
+      pool_query: "ansible_net_ltm_pools[?name=='{{ pool_name }}'].name"
+
+  - name: Set the pool name 
+    set_fact:
+      pool_name_status: 
+        -  "{{ info_out.ansible_facts| json_query ( pool_query ) | first }}"
+
+  - name: Print pool name 
+    ansible.builtin.debug:
+      msg: "Node name {{ pool_name_status }} is already exist"
+
+  rescue:
+
+  - name: Create a {{ pool_name }} pool in F5
+    bigip_pool:
+      provider: "{{ f5_provider }}"
+      lb_method: "{{ load_balancing_method }}"
+      name: "{{ pool_name }}"
+      slow_ramp_time: 120
+    delegate_to: localhost
+
+  - name: Print {{ pool_name }} pool status
+    ansible.builtin.debug:
+      msg: "The {{ pool_name }} pool has been created"

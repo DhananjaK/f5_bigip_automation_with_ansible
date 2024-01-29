@@ -1,0 +1,10 @@
+---
+- name: Add {{ item.name}} members to the {{ pool_name }} pool
+  bigip_pool_member:
+    provider: "{{ f5_provider }}"
+    description: "webserver {{ item.name }}"
+    host: "{{ item.host }}"
+    name: "{{ item.name }}"
+    pool: "{{ pool_name }}"
+    port: "{{ service_port }}"
+  delegate_to: localhost

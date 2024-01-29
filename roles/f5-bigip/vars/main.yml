@@ -1,0 +1,9 @@
+---
+# vars file for f5-bigip
+ansible_connection: local
+f5_provider:
+  password: qwerty#12
+  server: 192.168.100.237
+  user: admin
+  validate_certs: False
+  server_port: 443

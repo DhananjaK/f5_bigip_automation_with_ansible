@@ -1,0 +1,42 @@
+---
+- block:
+  - name: Collect BIG-IP LTM Virtual Servers information
+    bigip_device_info:
+      gather_subset:
+        - "virtual-servers"
+      provider: "{{ f5_provider }}"
+    delegate_to: localhost
+    register: info_out 
+
+  - name: Set the query with replacing with {{ vip_name }} variable
+    set_fact:              
+      vip_name_query: "ansible_net_virtual_servers[?name=='{{ vip_name }}'].name"
+
+  - name: Set the vip name 
+    set_fact:
+      virtual_ip_name: 
+        -  "{{ info_out.ansible_facts| json_query ( vip_name_query ) | first }}"
+
+  - name: Print virtual server name 
+    ansible.builtin.debug:
+      msg: "Virtual Server name {{ virtual_ip_name }} is already exist"
+
+  rescue:
+  - name: Create the {{ vip_name }} vip in F5
+    bigip_virtual_server:
+      provider: "{{ f5_provider }}"
+      description: "{{ description }}"
+      destination: "{{ virtual_ip }}"
+      name: "{{ vip_name }}"
+      pool: "{{ pool_name }}"
+      port: "{{ vip_service_port }}"
+      snat: Automap
+      profiles:
+        - http
+        - clientssl
+    delegate_to: localhost 
+
+  - name: Print the {{ vip_name }} status
+    ansible.builtin.debug:
+      msg: "The {{ vip_name }} virtual server has been created"
+

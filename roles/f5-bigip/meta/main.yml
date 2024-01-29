@@ -1,0 +1,13 @@
+galaxy_info:
+  author: Dhananja Kariyawasam
+  description: System Engineer 
+  
+  license: license (GPL-2.0-or-later, MIT, etc)
+
+  min_ansible_version: 2.1
+
+  galaxy_tags: 
+    - f5networks.f5_modules
+
+dependencies: []
+

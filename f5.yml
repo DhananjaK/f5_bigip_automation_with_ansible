@@ -1,0 +1,7 @@
+---
+- name: Create F5 LTM Rule
+  hosts: f5_bigip
+  collections:
+    - f5networks.f5_modules
+  roles: 
+    - f5-bigip

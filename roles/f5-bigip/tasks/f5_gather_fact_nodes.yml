@@ -1,0 +1,22 @@
+---
+- name: Collect BIG-IP LTM Pool, Nodes and Virtual Servers Information
+  bigip_device_info:
+    gather_subset:
+      - "nodes"
+    provider: "{{ f5_provider }}"
+  delegate_to: localhost
+  register: info_out 
+
+- name: Set the query with replacing with {{ item.name }} variable
+  set_fact:              
+    node_query: "ansible_net_nodes[?name=='{{ item.name }}'].name"
+
+- name: Set the node name 
+  set_fact:
+    node_name: 
+        -  "{{ info_out.ansible_facts| json_query ( node_query ) | first }}"
+
+- name: Print node name 
+  ansible.builtin.debug:
+    msg: 
+     - "Node name {{ node_name[0] }} is already exist"

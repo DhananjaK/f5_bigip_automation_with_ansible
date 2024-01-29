@@ -1,0 +1,21 @@
+---
+
+# Pool Information
+load_balancing_method: ratio-member
+pool_name: test-pool
+
+# Member Information
+service_port: 80
+member_list:
+  - host: 10.1.1.1
+    name: app01
+  - host: 10.1.1.2
+    name: app02
+  - host: 10.1.1.5
+    name: app03
+
+# Virtual Server Information
+description: test-vip
+virtual_ip: 192.168.1.2
+vip_name: test_vip
+vip_service_port: 80

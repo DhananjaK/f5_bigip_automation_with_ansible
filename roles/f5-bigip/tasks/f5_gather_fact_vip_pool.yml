@@ -1,0 +1,28 @@
+---
+- name: Collect BIG-IP LTM Pool, Nodes and Virtual Servers Information
+  bigip_device_info:
+    gather_subset:
+      - "ltm-pools"
+      - "virtual-servers"
+    provider: "{{ f5_provider }}"
+  delegate_to: localhost
+  register: info_out 
+
+- name: Set the query with replacing with variable
+  set_fact:              
+    pool_query: "ansible_net_ltm_pools[?name=='{{ pool_name }}'].name"
+    vip_name_query: "ansible_net_virtual_servers[?name=='{{ vip_name }}'].name"
+
+- name: Set the fact with replacing with {{ pool_name }} and {{ vip_name }} variable
+  set_fact:
+    pool_name_status: 
+      -  "{{ info_out.ansible_facts| json_query ( pool_query ) | first }}"
+    virtual_ip_name: 
+      -  "{{ info_out.ansible_facts| json_query ( vip_name_query ) | first }}"
+
+- name: Print virtual server,and pool name
+  ansible.builtin.debug:
+    msg: 
+     - "Pool name {{ pool_name_status }} is already exist"
+     - "Virtual Server name {{ virtual_ip_name }} is already exist"
+

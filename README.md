@@ -14,6 +14,7 @@ You must have an F5-BigIP LTM appliance to test this Ansible role.
 Role Variables
 --------------
 
+```yaml 
 # Pool Information
 load_balancing_method: []
 pool_name: []
@@ -33,7 +34,7 @@ description: []
 virtual_ip: []
 vip_name: []
 vip_service_port: []
-
+``````
 Dependencies
 ------------
 
@@ -46,6 +47,7 @@ ansible-galaxy collection install f5networks.f5_modules
 Example Playbook
 ----------------
 
+```yaml
 - name: Create F5 LTM Rule
   hosts: localhost
   connection: local
@@ -53,7 +55,7 @@ Example Playbook
     - f5networks.f5_modules
   roles: 
     - f5-bigip
-
+``` 
 License
 -------
 

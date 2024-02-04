@@ -1,31 +1,58 @@
 Role Name
 =========
 
-A brief description of the role goes here.
+In this Ansible role, we will cover the following workflow, 
+
+Validate the node, virtual server and pool existence → Create new nodes →  Create pool   → Add nodes to the created pool → Create virtual server → Attach pool to the virtual server.  
+
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+You must have an F5-BigIP LTM appliance to test this Ansible role.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+# Pool Information
+load_balancing_method: []
+pool_name: []
+
+# Member Information
+service_port: []
+member_list:
+  - host: []
+    name: []
+  - host: []
+    name: []
+  - host: []
+    name: []
+
+# Virtual Server Information
+description: []
+virtual_ip: []
+vip_name: []
+vip_service_port: []
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+Your Ansible controller must include the ```f5networks.f5_modules```  collection to run this role. 
+
+```bash
+ansible-galaxy collection install f5networks.f5_modules
+```
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+- name: Create F5 LTM Rule
+  hosts: localhost
+  connection: local
+  collections:
+    - f5networks.f5_modules
+  roles: 
+    - f5-bigip
 
 License
 -------
@@ -34,5 +61,6 @@ BSD
 
 Author Information
 ------------------
+Author: Dhananja Kariyawam 
+Blog: https://dhananjak.github.io/blogs/f5_bigip_automation_with_ansible/
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
